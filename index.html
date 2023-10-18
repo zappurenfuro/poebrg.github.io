@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path of Exile Build Randomiser</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(45deg, #2C5364, #203A43, #0F2027);
+            color: #ffffff;
+        }
+
+        h1 {
+            margin-top: 50px;
+            font-size: 2em;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            cursor: pointer;
+            background-color: #FF5733;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease 0s;
+        }
+
+        button:hover {
+            background-color: #FF7845;
+            box-shadow: 0px 8px 15px rgba(46, 229, 157, 0.4);
+            color: #fff;
+            transform: translateY(-7px);
+        }
+
+        #result h2 {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Path of Exile Build Randomiser</h1>
+    <button onclick="randomiseBuild()">Randomise Build</button>
+
+    <div id="result">
+        <!-- The randomised build will be shown here -->
+    </div>
+
+    <script>
+        const classes = [
+            "Witch", "Marauder", "Scion", "Templar", "Shadow", "Duelist", "Ranger"
+        ];
+
+        const ascendancies = {
+            "Witch": ["Necromancer", "Elementalist", "Occultist"],
+            "Marauder": ["Juggernaut", "Berserker", "Chieftain"],
+            "Scion": ["Ascendant"],
+            "Templar": ["Inquisitor", "Hierophant", "Guardian"],
+            "Shadow": ["Assassin", "Saboteur", "Trickster"],
+            "Duelist": ["Slayer", "Gladiator", "Champion"],
+            "Ranger": ["Deadeye", "Raider", "Pathfinder"]
+        };
+
+        const mainSkills = [
+            // Spells
+			"Ethereal Knives", "Explosive Trap", "Vaal Animate Weapon", "Animate Weapon", "Bear Trap", "Detonate Dead", "Sniper's Mark", "Vaal Detonate Dead", "Unearth", "Fire Trap", "Blade Vortex", "Vaal Blade Vortex", "Volatile Dead", "Vaal Arctic Armour", "Blood Rage", "Blade Blast", "Desecrate", "Herald of Agony", "Herald of Ice", "Arctic Armour", "Poacher's Mark", "Alchemist's Mark", "Plague Bearer", "Temporal Chains", "Cremation", "Flamethrower Trap", "Ice Trap", "Bladefall", "Seismic Trap", "Temporal Rift", "Summon Ice Golem", "Tornado", "Blight", "Rolling Magma", "Fireball", "Frostbolt", "Freezing Pulse", "Lightning Tendrils", "Purifying Flame", "Raise Zombie", "Spark", "Vaal Blight", "Vaal Fireball", "Vaal Spark", "Contagion", "Conversion Trap", "Flame Wall", "Frost Bomb", "Frost Wall", "Summon Holy Relic", "Orb of Storms", "Summon Raging Spirit", "Siphoning Trap", "Summon Skeletons", "Vaal Summon Skeletons", "Wither", "Arc", "Creeping Frost", "Bone Offering", "Storm Brand", "Blazing Salvo", "Scorching Ray", "Incinerate", "Flame Surge", "Flesh Offering", "Ice Nova", "Ice Spear", "Lightning Trap", "Manabond", "Essence Drain", "Spirit Offering", "Storm Burst", "Storm Call", "Vaal Arc", "Vaal Ice Nova", "Vaal Lightning Trap", "Vaal Storm Call", "Voltaxic Burst", "Wintertide Brand", "Assassin's Mark", "Cold Snap", "Galvanic Field", "Herald of Thunder", "Wave of Conviction", "Brand Recall", "Righteous Fire", "Forbidden Rite", "Tempest Shield", "Vaal Cold Snap", "Vaal Righteous Fire", "Convocation", "Conductivity", "Bane", "Despair", "Elemental Weakness", "Enfeeble", "Flammability", "Frostbite", "Spellslinger", "Energy Blade", "Vaal Firestorm", "Armageddon Brand", "Ball Lightning", "Flameblast", "Discharge", "Crackling Lance", "Divine Ire", "Hexblast", "Lightning Conduit", "Firestorm", "Eye of Winter", "Winter Orb", "Vortex", "Lightning Spire Trap", "Penance Brand", "Raise Spectre", "Dark Pact", "Shock Nova", "Soulrend", "Stormbind", "Summon Reaper", "Glacial Cascade", "Vaal Flameblast", "Void Sphere", "Summon Chaos Golem", "Sigil of Power", "Frost Shield", "Hydrosphere", "Summon Lightning Golem", "Summon Carrion Golem", "Arcanist Brand", 
+
+			// Attacks
+			"Vaal Cleave", "Vaal Molten Strike", "Vaal Smite", "Perforate", "Cleave", "Glacial Hammer", "Ground Slam", "Heavy Strike", "Molten Strike", "Shield Crush", "Smite", "Vaal Glacial Hammer", "Vaal Ground Slam", "Ancestral Protector", "Reckoning", "Vigilant Strike", "Leap Slam", "Shield Charge", "Vaal Volcanic Fissure", "Volcanic Fissure", "Chain Hook", "Infernal Blow", "Sunder", "Earthshatter", "Sweep", "Static Strike", "Infernal Cry", "Vengeance", "Vaal Domination", "Boneshatter", "Bladestorm", "Dominating Blow", "Consecrated Path", "Ice Crash", "Earthquake", "Rage Vortex", "Ancestral Warchief", "Vaal Ancestral Warchief", "Tectonic Slam", "Vaal Earthquake", "Frozen Legion", "Vaal Ice Shot", "Vaal Caustic Arrow", "Vaal Split Arrow", "Burning Arrow", "Cobra Lash", "Double Strike", "Dual Strike", "Spectral Throw", "Ice Shot", "Frost Blades", "Splitting Steel", "Caustic Arrow", "Galvanic Arrow", "Split Arrow", "Vaal Burning Arrow", "Vaal Spectral Throw", "Vaal Double Strike", "Viper Strike", "Puncture", "Riposte", "Shrapnel Ballista", "Snipe", "Vaal Flicker Strike", "Blink Arrow", "Flicker Strike", "Mirror Arrow", "Whirling Blades", "Vaal Lightning Arrow", "Vaal Venom Gyre", "Barrage", "Blade Trap", "Siege Ballista", "Lacerate", "Elemental Hit", "Lightning Arrow", "Lightning Strike", "Poisonous Concoction", "Rain of Arrows", "Toxic Rain", "Reave", "Shattering Steel", "Venom Gyre", "Spectral Helix", "Vaal Lightning Strike", "Vaal Rain of Arrows", "Vaal Reave", "Ensnaring Arrow", "Frenzy", "Vaal Blade Flurry", "Blast Rain", "Blade Flurry", "Charged Dash", "Cyclone", "Wild Strike", "Explosive Arrow", "Explosive Concoction", "Lancing Steel", "Pestilent Strike", "Artillery Ballista", "Storm Rain", "Spectral Shield Throw", "Tornado Shot", "Vaal Cyclone", "Scourge Arrow", "Snipe", "Kinetic Bolt", "Power Siphon", "Vaal Power Siphon", "Kinetic Blast"
+        ];
+
+        function randomiseBuild() {
+            const chosenClass = classes[Math.floor(Math.random() * classes.length)];
+            const chosenAscendancy = ascendancies[chosenClass][Math.floor(Math.random() * ascendancies[chosenClass].length)];
+            const chosenMainSkill = mainSkills[Math.floor(Math.random() * mainSkills.length)];
+
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = `
+                <h2>Class: ${chosenClass}</h2>
+                <h2>Ascendancy: ${chosenAscendancy}</h2>
+                <h2>Main Skill: ${chosenMainSkill}</h2>
+            `;
+        }
+    </script>
+</body>
+
+</html>
